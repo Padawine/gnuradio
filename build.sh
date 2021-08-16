@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t gnuradio:3.8.2.0 .
+docker build -t john4gun/gnuradio .
