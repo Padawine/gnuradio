@@ -2,12 +2,12 @@
 
 ### Howto use
 
-build.sh - build docker image:
+build.sh - Build john4gun/gnuradio docker image - The image is also available at DockerHub(<https://hub.docker.com/r/john4gun/gnuradio>)
 ```text
 docker build -t john4gun/gnuradio .
 ```
 
-run.sh - Run docker image with UI and audio support:
+run.sh - Run john4gun/gnuradio docker image with UI and audio support:
 ```shell
 #!/bin/bash
 xhost +
