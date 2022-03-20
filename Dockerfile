@@ -31,23 +31,32 @@ RUN apt-get install -y python3-cairo-dev python3-cairo python3-gi-cairo libcairo
 
 RUN apt-get install -y libgps-dev libboost-python-dev libudev-dev gpsd-clients python3-gps gpsd libgps-dev libgps26 gpsd gpsd-clients python3-gps
 
-RUN git clone https://github.com/EttusResearch/liberio.git
-WORKDIR /usr/local/src/liberio
-RUN autoreconf -i
-RUN ./configure 
-RUN make && make install
+WORKDIR /usr/src
+RUN git clone --recursive https://github.com/gnuradio/volk.git && \
+    mkdir /usr/src/volk/build
+WORKDIR /usr/src/volk/build
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/usr/bin/python3 ../ && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig
 
-WORKDIR /usr/local/src/
-RUN wget https://github.com/EttusResearch/uhd/archive/v3.14.1.1.L.tar.gz
-RUN tar xvf v3*.tar.gz
+#RUN git clone https://github.com/EttusResearch/liberio.git
+#WORKDIR /usr/local/src/liberio
+#RUN autoreconf -i
+#RUN ./configure 
+#RUN make && make install
 
-RUN \
-        cd /usr/local/src/uhd-*/host && \
-        mkdir build && \
-        cd build && \
-        cmake ../ -DENABLE_PYTHON3=ON -DENABLE_PYTHON_API=on && \
-        make -j8 && \
-        make install
+#WORKDIR /usr/local/src/
+#RUN wget https://github.com/EttusResearch/uhd/archive/v3.14.1.1.L.tar.gz
+#RUN tar xvf v3*.tar.gz
+
+#RUN \
+#        cd /usr/local/src/uhd-*/host && \
+#        mkdir build && \
+#        cd build && \
+#        cmake ../ -DENABLE_PYTHON3=ON -DENABLE_PYTHON_API=on && \
+#        make -j8 && \
+#        make install
 
 WORKDIR /usr/local/src/
 RUN apt-get install -y libqt5svg5-dev portaudio19-dev libthrift-dev libgsm1-dev libcodec2-dev libmpfr-dev
@@ -67,7 +76,7 @@ RUN \
                 -DENABLE_GR_AUDIO=on \
                 -DENABLE_GR_QTGUI=on \
                 -DENABLE_GR_TRELLIS=on \
-                -DENABLE_GR_UHD=ON \
+#                -DENABLE_GR_UHD=ON \
                 -DENABLE_GR_UTILS=on \
                 -DENABLE_GR_VOCODER=on \
                 -DENABLE_GR_WAVELET=on \
@@ -80,7 +89,7 @@ RUN make install
 ENV PYTHONPATH /usr/local/lib/python3/dist-packages/
 ENV LD_LIBRARY_PATH /usr/local/lib/
 
-RUN uhd_images_downloader
+#RUN uhd_images_downloader
 
 ENV XDG_RUNTIME_DIR /tmp/
 RUN apt-get update
